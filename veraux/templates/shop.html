@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section container">
+    <h1 class="heading-xl text-center">Shop Collections</h1>
+
+    <div class="shop-layout" style="display: grid; grid-template-columns: 250px 1fr; gap: 2rem; margin-top: 3rem;">
+        <!-- Sidebar Filters -->
+        <aside class="shop-sidebar">
+            <div class="filter-group">
+                <h3>Categories</h3>
+                <ul class="filter-list" style="list-style: none; margin-top: 1rem;">
+                    <li><a href="{% url 'shop' %}" class="{% if not request.GET.category %}active-filter{% endif %}"
+                            style="display: block; padding: 5px 0; color: var(--color-text);">All Products</a></li>
+                    {% for category in categories %}
+                    <li><a href="{% url 'shop' %}?category={{ category.slug }}"
+                            class="{% if request.GET.category == category.slug %}active-filter{% endif %}"
+                            style="display: block; padding: 5px 0; color: var(--color-text);">{{ category.name }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Product Grid -->
+        <div class="shop-products">
+            <div class="grid"
+                style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--spacing-md);">
+                {% for product in products %}
+                <div class="product-card fade-in">
+                    <div class="product-image-container">
+                        <a href="{% url 'product_detail' product.slug %}">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                        </a>
+                    </div>
+                    <div class="product-details text-center">
+                        <a href="{% url 'product_detail' product.slug %}">
+                            <h3>{{ product.name }}</h3>
+                        </a>
+                        <p class="product-price">${{ product.price }}</p>
+                        <div class="product-actions" style="margin-top: 10px;">
+                            <button class="btn btn-sm btn-primary" onclick="addToCart({{ product.id }})">Add to
+                                Cart</button>
+                            <button class="btn btn-sm btn-outline" onclick="addToWishlist({{ product.id }})"><i
+                                    class="far fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No products found in this category.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

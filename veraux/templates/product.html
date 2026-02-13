@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section container">
+    <div class="product-detail-layout"
+        style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+        <!-- Image Gallery -->
+        <div class="product-gallery">
+            <div class="main-image">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                    style="width: 100%; height: auto; border-radius: 4px;">
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="product-info">
+            <p class="product-category"
+                style="color: #666; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">{{
+                product.category.name }}</p>
+            <h1 class="heading-lg" style="margin: 1rem 0;">{{ product.name }}</h1>
+            <p class="product-price" style="font-size: 1.5rem; margin-bottom: 2rem;">${{ product.price }}</p>
+
+            <div class="product-description" style="margin-bottom: 2rem; line-height: 1.6;">
+                {{ product.description|linebreaks }}
+            </div>
+
+            <div class="product-actions" style="display: flex; gap: 1rem;">
+                <button class="btn btn-primary" onclick="addToCart({{ product.id }})" style="flex-grow: 1;">Add to
+                    Cart</button>
+                <button class="btn btn-outline" onclick="addToWishlist({{ product.id }})"><i
+                        class="far fa-heart"></i></button>
+            </div>
+
+            <div class="product-meta" style="margin-top: 2rem; font-size: 0.9rem; color: #666;">
+                <p><strong>SKU:</strong> {{ product.id|stringformat:"04d" }}</p>
+                <p><strong>Stock:</strong> {% if product.stock > 0 %}In Stock{% else %}Out of Stock{% endif %}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Products -->
+<section class="section container">
+    <h2 class="heading-lg text-center">You May Also Like</h2>
+    <div class="grid"
+        style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--spacing-md); margin-top: 2rem;">
+        {% for related in related_products %}
+        <div class="product-card">
+            <div class="product-image-container">
+                <a href="{% url 'product_detail' related.slug %}">
+                    <img src="{{ related.image.url }}" alt="{{ related.name }}" class="product-image">
+                </a>
+            </div>
+            <div class="product-details text-center">
+                <a href="{% url 'product_detail' related.slug %}">
+                    <h3>{{ related.name }}</h3>
+                </a>
+                <p class="product-price">${{ related.price }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

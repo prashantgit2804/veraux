@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veraux | Luxury Jewelry & Accessories</title>
+    <meta name="description"
+        content="Discover Veraux - Where elegance meets craft. Premium jewelry, watches, and accessories.">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+            <a href="{% url 'home' %}" class="logo">VERAUX</a>
+
+            <nav class="nav-menu">
+                <a href="{% url 'home' %}" class="nav-link">Home</a>
+                <a href="{% url 'shop' %}" class="nav-link">Shop</a>
+                <a href="{% url 'about' %}" class="nav-link">About</a>
+                <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+            </nav>
+
+            <div class="nav-icons">
+                {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="nav-link" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
+                <a href="{% url 'wishlist' %}" class="nav-link"><i class="far fa-heart"></i></a>
+                {% else %}
+                <a href="{% url 'login' %}" class="nav-link"><i class="far fa-user"></i></a>
+                <a href="{% url 'login' %}" class="nav-link"><i class="far fa-heart"></i></a>
+                {% endif %}
+
+                <a href="#" class="nav-link cart-trigger" id="cart-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count" id="cart-count-badge"
+                        style="display: none; background: var(--color-primary); color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; vertical-align: top; margin-left: -5px;">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    {% if messages %}
+    <div class="container" style="margin-top: 20px;">
+        {% for message in messages %}
+        <div class="alert {{ message.tags }}"
+            style="padding: 10px; margin-bottom: 10px; border-radius: 4px; 
+            {% if message.tags == 'success' %}background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;{% endif %}
+            {% if message.tags == 'error' %}background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- Cart Popup -->
+    <div id="cart-popup" class="cart-popup"
+        style="display: none; position: fixed; top: 0; right: 0; width: 300px; height: 100vh; background: #fff; box-shadow: -2px 0 5px rgba(0,0,0,0.5); z-index: 1000; padding: 20px; overflow-y: auto;">
+        <div class="cart-header"
+            style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 10px;">
+            <h3>Your Cart</h3>
+            <button id="close-cart"
+                style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+        </div>
+        <div id="cart-items-container">
+            <!-- Items injected via JS -->
+        </div>
+        <div class="cart-footer" style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px;">
+            <p>Total: $<span id="cart-popup-total">0.00</span></p>
+            <a href="{% url 'cart' %}" class="btn btn-outline"
+                style="width: 100%; margin-bottom: 10px; text-align: center;">View Cart</a>
+            <a href="{% url 'checkout' %}" class="btn btn-primary" style="width: 100%; text-align: center;">Checkout</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container grid"
+            style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md);">
+            <div>
+                <h2 class="logo" style="margin-bottom: var(--spacing-sm);">VERAUX</h2>
+                <p style="color: #ccc;">Defining modern luxury through timeless design.</p>
+            </div>
+            <div>
+                <h4>Shop</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'shop' %}?category=jewelry">Jewelry</a></li>
+                    <li><a href="{% url 'shop' %}?category=watches">Watches</a></li>
+                    <li><a href="{% url 'shop' %}?category=perfumes">Perfumes</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Customer Care</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                    <li><a href="#">Shipping & Returns</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Newsletter</h4>
+                <form action="#" style="display: flex; margin-top: 1rem;">
+                    <input type="email" placeholder="Your email"
+                        style="background: transparent; border: 1px solid #777; color: white; padding: 10px; flex-grow: 1;">
+                    <button type="submit" class="btn btn-primary" style="padding: 10px 20px;">GO</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Veraux. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="module" src="{% static 'js/slider.js' %}"></script>
+    <script type="module" src="{% static 'js/main.js' %}"></script>
+
+    <script>
+        // Cart Popup Logic
+        $(document).ready(function () {
+            function updateCartPopup() {
+                $.ajax({
+                    url: "{% url 'cart_data' %}",
+                    success: function (data) {
+                        $('#cart-items-container').empty();
+                        if (data.items.length === 0) {
+                            $('#cart-items-container').html('<p>Your cart is empty.</p>');
+                        } else {
+                            data.items.forEach(item => {
+                                $('#cart-items-container').append(`
+                                    <div class="cart-popup-item" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                        <img src="${item.image}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover;">
+                                        <div>
+                                            <h4>${item.name}</h4>
+                                            <p>${item.quantity} x $${item.price}</p>
+                                        </div>
+                                    </div>
+                                `);
+                            });
+                        }
+                        $('#cart-popup-total').text(data.total.toFixed(2));
+                        $('#cart-count-badge').text(data.count).show();
+                        if (data.count === 0) $('#cart-count-badge').hide();
+                    }
+                });
+            }
+
+            $('#cart-icon').click(function (e) {
+                e.preventDefault();
+                $('#cart-popup').fadeIn();
+                updateCartPopup();
+            });
+
+            $('#close-cart').click(function () {
+                $('#cart-popup').fadeOut();
+            });
+
+            // Initial load
+            updateCartPopup();
+        });
+
+        // Add to Wishlist/Cart Global Functions
+        window.addToCart = function (productId) {
+            $.ajax({
+                url: `/cart/add/${productId}/`,
+                success: function (data) {
+                    alert(data.message);
+                    // Update cart popup count
+                    $('#cart-count-badge').text(data.cart_count).show();
+                }
+            });
+        }
+
+        window.addToWishlist = function (productId) {
+            $.ajax({
+                url: `/wishlist/add/${productId}/`,
+                success: function (data) {
+                    alert(data.message);
+                },
+                error: function (xhr) {
+                    if (xhr.status === 401) alert('Please login first.');
+                }
+            });
+        }
+
+        window.removeFromWishlist = function (productId) {
+            $.ajax({
+                url: `/wishlist/remove/${productId}/`,
+                success: function (data) {
+                    alert(data.message);
+                    location.reload(); // Reload to reflect removal
+                },
+                error: function (xhr) {
+                    if (xhr.status === 401) alert('Please login first.');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

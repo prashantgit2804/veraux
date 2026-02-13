@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section container">
+    <h1 class="heading-lg text-center" style="margin-bottom: 3rem;">Checkout</h1>
+
+    <div class="checkout-layout" style="display: grid; grid-template-columns: 1fr 400px; gap: 3rem;">
+        <!-- Billing Details -->
+        <div class="billing-details">
+            <h3 style="margin-bottom: 1.5rem;">Billing Details</h3>
+            <form id="checkout-form">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <input type="text" placeholder="First Name" class="form-input" required
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd;">
+                    <input type="text" placeholder="Last Name" class="form-input" required
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd;">
+                </div>
+                <input type="email" placeholder="Email Address" class="form-input" required
+                    style="width: 100%; padding: 10px; border: 1px solid #ddd; margin-bottom: 1rem;">
+                <input type="text" placeholder="Street Address" class="form-input" required
+                    style="width: 100%; padding: 10px; border: 1px solid #ddd; margin-bottom: 1rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <input type="text" placeholder="City" class="form-input" required
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd;">
+                    <input type="text" placeholder="Zip Code" class="form-input" required
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd;">
+                </div>
+                <input type="tel" placeholder="Phone" class="form-input" required
+                    style="width: 100%; padding: 10px; border: 1px solid #ddd; margin-bottom: 1rem;">
+            </form>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="order-summary" style="background: var(--color-bg-light); padding: 2rem; height: fit-content;">
+            <h3 style="margin-bottom: 1.5rem;">Your Order</h3>
+            <div class="order-items" style="margin-bottom: 2rem;">
+                {% for item in cart.items.all %}
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                    <span>{{ item.product.name }} x {{ item.quantity }}</span>
+                    <span>${{ item.total_price }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div style="border-top: 1px solid #ddd; padding-top: 1rem; margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                    <span>Total</span>
+                    <span>${{ cart.total_price }}</span>
+                </div>
+            </div>
+
+            <div class="payment-methods" style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem;"><input type="radio" name="payment" checked> Direct
+                    Bank Transfer</label>
+                <label style="display: block; margin-bottom: 0.5rem;"><input type="radio" name="payment"> Cash on
+                    Delivery</label>
+            </div>
+
+            <button type="submit" form="checkout-form" class="btn btn-primary" style="width: 100%;">Place Order</button>
+        </div>
+    </div>
+</section>
+{% endblock %}

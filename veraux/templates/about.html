@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="hero"
+    style="height: 50vh; background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1573408301185-9146fe634ad0?q=80&w=2000&auto=format&fit=crop');">
+    <div class="hero-content">
+        <h1 class="heading-xl">Our Legacy</h1>
+    </div>
+</div>
+
+<section class="section container">
+    <div class="grid" style="grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); align-items: center;">
+        <div class="fade-in">
+            <h2 class="heading-lg">Crafting Elegance Since 2026</h2>
+            <p class="description-text">
+                Veraux was born from a desire to bridge the gap between timeless tradition and modern minimalism.
+                We believe that jewelry is not just an accessory, but a personal statement—an extension of one's
+                aura.
+            </p>
+            <p class="description-text">
+                Our artisans work with ethically sourced materials to create pieces that tell a story.
+                From the first sketch to the final polish, every step is a testament to our obsession with
+                perfection.
+            </p>
+        </div>
+        <div>
+            <img src="https://images.unsplash.com/photo-1531995811006-35cb42e1a022?q=80&w=1000&auto=format&fit=crop"
+                style="width: 100%; height: auto;">
+        </div>
+    </div>
+</section>
+{% endblock %}

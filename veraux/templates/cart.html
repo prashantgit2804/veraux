@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section container">
+    <h1 class="heading-xl text-center">Your Shopping Bag</h1>
+
+    <div class="cart-container" style="margin-top: 3rem;">
+        {% if cart.items.count > 0 %}
+        <div class="cart-items">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 1px solid #ddd; text-align: left;">
+                        <th style="padding: 1rem;">Product</th>
+                        <th style="padding: 1rem;">Price</th>
+                        <th style="padding: 1rem;">Quantity</th>
+                        <th style="padding: 1rem;">Total</th>
+                        <th style="padding: 1rem;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart.items.all %}
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"
+                                style="width: 60px; height: 60px; object-fit: cover;">
+                            <span>{{ item.product.name }}</span>
+                        </td>
+                        <td style="padding: 1rem;">${{ item.product.price }}</td>
+                        <td style="padding: 1rem;">
+                            <div class="qty-selector" style="transform: scale(0.8); transform-origin: left;">
+                                <button class="qty-btn" onclick="updateCartItem({{ item.id }}, -1)">-</button>
+                                <input type="number" class="qty-input" value="{{ item.quantity }}" readonly>
+                                <button class="qty-btn" onclick="updateCartItem({{ item.id }}, 1)">+</button>
+                            </div>
+                        </td>
+                        <td style="padding: 1rem;">${{ item.total_price }}</td>
+                        <td style="padding: 1rem;">
+                            <button onclick="removeCartItem({{ item.id }})"
+                                style="background: none; border: none; color: red; cursor: pointer;"><i
+                                    class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cart-summary" style="margin-top: 2rem; display: flex; justify-content: flex-end;">
+            <div style="width: 300px; background: var(--color-bg-light); padding: 2rem;">
+                <h3 style="margin-bottom: 1rem;">Summary</h3>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Subtotal</span>
+                    <span>${{ cart.total_price }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                    <span>Shipping</span>
+                    <span>Free</span>
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; margin-bottom: 1rem; font-weight: bold; border-top: 1px solid #ddd; padding-top: 1rem;">
+                    <span>Total</span>
+                    <span>${{ cart.total_price }}</span>
+                </div>
+                <a href="{% url 'checkout' %}" class="btn btn-primary" style="width: 100%; text-align: center;">Proceed
+                    to Checkout</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center" style="padding: 3rem;">
+            <p>Your cart is currently empty.</p>
+            <a href="{% url 'shop' %}" class="btn btn-primary" style="margin-top: 1rem;">Continue Shopping</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    function updateCartItem(itemId, change) {
+        const action = change > 0 ? 'increase' : 'decrease';
+
+        fetch(`/cart/update/${itemId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({ action: action })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    location.reload();
+                } else {
+                    alert('Error updating cart: ' + data.message);
+                }
+            });
+    }
+
+    function removeCartItem(itemId) {
+        if (confirm('Are you sure you want to remove this item?')) {
+            fetch(`/cart/remove/${itemId}/`, {
+                method: 'POST', // or DELETE if view supports it, keeping consistent with POST
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        location.reload();
+                    } else {
+                        alert('Error removing item: ' + data.message);
+                    }
+                });
+        }
+    }
+</script>
+{% endblock %}

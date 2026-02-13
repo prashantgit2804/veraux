@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container section">
+    <div class="grid" style="grid-template-columns: 1fr 1fr; gap: var(--spacing-lg);">
+        <div>
+            <h1 class="heading-lg">Get in Touch</h1>
+            <p class="description-text">We are here to assist you with any inquiries regarding our collections or
+                your order.</p>
+
+            <div style="margin-top: var(--spacing-md);">
+                <div style="margin-bottom: var(--spacing-sm);">
+                    <i class="fas fa-map-marker-alt text-gold" style="width: 24px;"></i>
+                    <span>123 Luxury Ave, New York, NY 10012</span>
+                </div>
+                <div style="margin-bottom: var(--spacing-sm);">
+                    <i class="fas fa-envelope text-gold" style="width: 24px;"></i>
+                    <span>concierge@veraux.com</span>
+                </div>
+                <div style="margin-bottom: var(--spacing-sm);">
+                    <i class="fas fa-phone text-gold" style="width: 24px;"></i>
+                    <span>+1 (212) 555-0199</span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <form id="contact-form" onsubmit="event.preventDefault(); alert('Message sent!');">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea class="form-input" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
